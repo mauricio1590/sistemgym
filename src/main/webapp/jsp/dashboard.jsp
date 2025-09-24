@@ -15,24 +15,24 @@
         <!-- Sidebar fijo -->
         <div class="sidebar">
             <h2>SistemGym</h2>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1 fs-4"><b><a href="dashboard.jsp?vista=persona" class="text-white text-decoration-none">👤 Persona</a></b></li>
-                <li class="mb-1 fs-4"><a href="dashboard.jsp?vista=cliente" class="text-white text-decoration-none">🧍 Cliente</a></li>
-                <li class="mb-1 fs-4"><a href="dashboard.jsp?vista=pago" class="text-white text-decoration-none">💳 Pago</a></li>
-                <li class="mb-1 fs-4"><a href="dashboard.jsp?vista=gastos" class="text-white text-decoration-none">💸 Gastos</a></li>
-                <li class="mb-1 fs-4"><a href="dashboard.jsp?vista=ventas" class="text-white text-decoration-none">🛒 Ventas</a></li>
-                <li class="mb-1 fs-4"><a href="dashboard.jsp?vista=reportes" class="text-white text-decoration-none">📊 Reportes</a></li>
+            <ul>
+                <li><a href="dashboard.jsp?vista=persona">👤 Persona</a></li>
+                <li><a href="dashboard.jsp?vista=cliente">🧍 Cliente</a></li>
+                <li><a href="dashboard.jsp?vista=pago">💳 Pago</a></li>
+                <li><a href="dashboard.jsp?vista=gastos">💸 Gastos</a></li>
+                <li><a href="dashboard.jsp?vista=ventas">🛒 Ventas</a></li>
+                <li><a href="dashboard.jsp?vista=reportes">📊 Reportes</a></li>
             </ul>
         </div>
 
-        <!-- Main content dinámico -->
+        <!-- Contenido principal -->
         <div class="main">
             <%
                 Usuario usuario = (Usuario) session.getAttribute("usuario");
                 if (usuario != null) {
                     String nombre = usuario.getUsername();
             %>
-                <h3 class="mb-4">Bienvenido, <%= nombre %></h3>
+                <h3>Bienvenido, <%= nombre %></h3>
 
                 <div class="sub-content">
                     <%
@@ -41,8 +41,7 @@
 
                         if (vista != null && vistasPermitidas.contains(vista)) {
                             try {
-                            out.println("Vista solicitada: " + vista);
-
+                                out.println("Vista solicitada: " + vista);
                                 RequestDispatcher rd = request.getRequestDispatcher("/jsp/" + vista + ".jsp");
                                 rd.include(request, response);
                             } catch (Exception e) {

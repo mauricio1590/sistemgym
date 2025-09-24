@@ -27,41 +27,40 @@ public class PersonaServlet extends HttpServlet {
         }
     }
 
-    // Listar, buscar y eliminar personas
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
+        System.out.println("🟥 Acción recibida: " + accion);
 
         try {
-            if ("buscar".equals(accion)) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                Persona persona = dao.obtenerPersonaPorId(id);
-                request.setAttribute("persona", persona);
-                RequestDispatcher rd = request.getRequestDispatcher("/jsp/formularioPersona.jsp");
-                rd.forward(request, response);
+            if ("listar".equals(accion) || accion == null) {
+                List<Persona> personas = dao.listarPersonas();
+                System.out.println("🟥 Personas listadas: " + personas.size());
+                request.getSession().setAttribute("personas", personas);
+                response.sendRedirect("jsp/dashboard.jsp?vista=persona");
 
             } else if ("eliminar".equals(accion)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 dao.eliminarPersona(id);
                 List<Persona> personas = dao.listarPersonas();
-                request.setAttribute("personas", personas);
-                RequestDispatcher rd = request.getRequestDispatcher("jsp/dashboard.jsp?vista=persona");
-                rd.forward(request, response);
+                request.getSession().setAttribute("personas", personas);
+                response.sendRedirect("jsp/dashboard.jsp?vista=persona");
 
-            } else { // listar
-                List<Persona> personas = dao.listarPersonas();
-                request.setAttribute("personas", personas);
-                RequestDispatcher rd = request.getRequestDispatcher("jsp/dashboard.jsp?vista=persona");
+            } else if ("buscar".equals(accion)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                Persona persona = dao.obtenerPersonaPorId(id);
+                request.setAttribute("persona", persona);
+                RequestDispatcher rd = request.getRequestDispatcher("/jsp/formularioPersona.jsp");
                 rd.forward(request, response);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("jsp/dashboard.jsp?vista=persona&error=1");
         }
     }
 
-    // Registrar o actualizar persona
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -95,14 +94,14 @@ public class PersonaServlet extends HttpServlet {
 
             if (exito) {
                 List<Persona> personas = dao.listarPersonas();
-                request.setAttribute("personas", personas);
-                RequestDispatcher rd = request.getRequestDispatcher("jsp/dashboard.jsp?vista=persona");
-                rd.forward(request, response);
+                request.getSession().setAttribute("personas", personas);
+                response.sendRedirect("jsp/dashboard.jsp?vista=persona");
             } else {
                 request.setAttribute("error", "No se pudo guardar la persona.");
                 RequestDispatcher rd = request.getRequestDispatcher("/jsp/formularioPersona.jsp");
                 rd.forward(request, response);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("jsp/dashboard.jsp?vista=persona&error=2");

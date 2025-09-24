@@ -55,15 +55,31 @@ public class PersonaDAO {
                 List<Persona> lista = new ArrayList<>();
                 String sql = "SELECT * FROM cliente";
 
+                System.out.println("🟡 Ejecutando listarPersonas()...");
+
                 try (PreparedStatement stmt = con.prepareStatement(sql);
                      ResultSet rs = stmt.executeQuery()) {
 
+                        int contador = 0;
+
                         while (rs.next()) {
-                                lista.add(mapearPersona(rs));
+                                Persona persona = mapearPersona(rs);
+                                lista.add(persona);
+                                contador++;
+
+                                System.out.println("✅ Persona encontrada: " + persona.getNombre() + " " + persona.getApellido());
                         }
+
+                        System.out.println("🔵 Total personas listadas: " + contador);
+
+                } catch (SQLException e) {
+                        System.err.println("❌ Error al listar personas: " + e.getMessage());
+                        throw e;
                 }
+
                 return lista;
         }
+
 
         // Eliminar persona por ID
         public boolean eliminarPersona(int id) throws SQLException {
