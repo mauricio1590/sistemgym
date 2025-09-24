@@ -41,6 +41,8 @@
 
                         if (vista != null && vistasPermitidas.contains(vista)) {
                             try {
+                            out.println("Vista solicitada: " + vista);
+
                                 RequestDispatcher rd = request.getRequestDispatcher("/jsp/" + vista + ".jsp");
                                 rd.include(request, response);
                             } catch (Exception e) {

@@ -44,16 +44,20 @@ public class PersonaServlet extends HttpServlet {
             } else if ("eliminar".equals(accion)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 dao.eliminarPersona(id);
-                response.sendRedirect("personas?accion=listar");
+                List<Persona> personas = dao.listarPersonas();
+                request.setAttribute("personas", personas);
+                RequestDispatcher rd = request.getRequestDispatcher("jsp/dashboard.jsp?vista=persona");
+                rd.forward(request, response);
 
             } else { // listar
                 List<Persona> personas = dao.listarPersonas();
-                request.getSession().setAttribute("personas", personas);
-                response.sendRedirect("dashboard.jsp?vista=personas");
+                request.setAttribute("personas", personas);
+                RequestDispatcher rd = request.getRequestDispatcher("jsp/dashboard.jsp?vista=persona");
+                rd.forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("dashboard.jsp?vista=personas&error=1");
+            response.sendRedirect("jsp/dashboard.jsp?vista=persona&error=1");
         }
     }
 
@@ -90,7 +94,10 @@ public class PersonaServlet extends HttpServlet {
             }
 
             if (exito) {
-                response.sendRedirect("personas?accion=listar");
+                List<Persona> personas = dao.listarPersonas();
+                request.setAttribute("personas", personas);
+                RequestDispatcher rd = request.getRequestDispatcher("jsp/dashboard.jsp?vista=persona");
+                rd.forward(request, response);
             } else {
                 request.setAttribute("error", "No se pudo guardar la persona.");
                 RequestDispatcher rd = request.getRequestDispatcher("/jsp/formularioPersona.jsp");
@@ -98,7 +105,7 @@ public class PersonaServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("dashboard.jsp?vista=personas&error=2");
+            response.sendRedirect("jsp/dashboard.jsp?vista=persona&error=2");
         }
     }
 }
