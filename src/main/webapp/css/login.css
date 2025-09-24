@@ -1,0 +1,141 @@
+/* Fondo general con imagen y filtro */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: url("../img/logo.png") no-repeat center center;
+    background-size: cover;
+    filter: brightness(1.2) contrast(1.1);
+    z-index: -1;
+}
+
+/* Imagen de fondo con filtro visual */
+body::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(0,198,255,0.3), rgba(127,0,255,0.3));
+    z-index: -1; /* igual que ::before */
+    pointer-events: none;
+}
+
+
+
+/* Contenedor del login */
+.login-container {
+    background: rgba(255, 255, 255, 0.65); /* Más translúcido */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    width: 360px;
+    text-align: center;
+    z-index: 1;
+}
+.login-container {
+    animation: fadeInLogin 1s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInLogin {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+
+
+
+/* Título */
+.login-container h2 {
+    margin-bottom: 30px;
+    color: #1e2a38;
+}
+
+/* Formulario */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiquetas */
+label {
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Campos de entrada */
+input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botón */
+button {
+    padding: 12px;
+    background-color: #1e2a38;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2c3e50;
+}
+
+/* Mensaje de error */
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Día: fondo claro */
+body.day-mode::after {
+    background: linear-gradient(135deg, rgba(0,198,255,0.3), rgba(127,0,255,0.3));
+}
+
+/* Noche: fondo más profundo */
+body.night-mode::after {
+    background: linear-gradient(135deg, rgba(30,30,60,0.5), rgba(80,0,120,0.5));
+}
+
+
+
+
+
+
+@media (max-width: 480px) {
+    .login-container {
+        width: 90%;
+        padding: 30px 20px;
+        border-radius: 10px;
+    }
+
+    .login-container h2 {
+        font-size: 24px;
+    }
+
+    input, button {
+        font-size: 16px;
+    }
+}
