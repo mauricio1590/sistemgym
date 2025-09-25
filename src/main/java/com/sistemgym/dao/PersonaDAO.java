@@ -15,7 +15,7 @@ public class PersonaDAO {
 
         // Registrar nueva persona
         public boolean registrarPersona(Persona persona) throws SQLException {
-                String sql = "INSERT INTO cliente (tipodocumento, cedula, nombre, apellido, telefono, direccion, correo, ruta, nacimiento, eps, contacto, telefono2, rh, huella, modificado) " +
+                String sql = "INSERT INTO cliente (tipodocumento, cedula, nombre, apellido, telefono, direccion, correo, ruta, nacimiento, eps, contacto, telefono2, rh, huella, mo) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -26,7 +26,7 @@ public class PersonaDAO {
 
         // Actualizar persona existente
         public boolean actualizarPersona(Persona persona) throws SQLException {
-                String sql = "UPDATE cliente SET tipodocumento = ?, cedula = ?, nombre = ?, apellido = ?, telefono = ?, direccion = ?, correo = ?, ruta = ?, nacimiento = ?, eps = ?, contacto = ?, telefono2 = ?, rh = ?, huella = ?, modificado = ? WHERE id = ?";
+                String sql = "UPDATE cliente SET  cedula = ?, nombre = ?, apellido = ?, telefono = ?, direccion = ?, correo = ?, ruta = ?, nacimiento = ?, eps = ?, contacto = ?, telefono2 = ?, rh = ?, huella = ?, mo = ? WHERE id = ?";
 
                 try (PreparedStatement stmt = con.prepareStatement(sql)) {
                         setParametros(stmt, persona);
@@ -55,22 +55,18 @@ public class PersonaDAO {
                 List<Persona> lista = new ArrayList<>();
                 String sql = "SELECT * FROM cliente";
 
-                System.out.println("🟡 Ejecutando listarPersonas()...");
+                System.out.println("🟡 Entrando a listarPersonas()...");
 
                 try (PreparedStatement stmt = con.prepareStatement(sql);
                      ResultSet rs = stmt.executeQuery()) {
 
-                        int contador = 0;
-
                         while (rs.next()) {
                                 Persona persona = mapearPersona(rs);
                                 lista.add(persona);
-                                contador++;
-
                                 System.out.println("✅ Persona encontrada: " + persona.getNombre() + " " + persona.getApellido());
                         }
 
-                        System.out.println("🔵 Total personas listadas: " + contador);
+                        System.out.println("🔵 Total personas listadas: " + lista.size());
 
                 } catch (SQLException e) {
                         System.err.println("❌ Error al listar personas: " + e.getMessage());
@@ -95,7 +91,7 @@ public class PersonaDAO {
         private Persona mapearPersona(ResultSet rs) throws SQLException {
                 Persona persona = new Persona();
                 persona.setId(rs.getInt("id"));
-                persona.setTipodocumento(rs.getInt("tipodocumento"));
+
                 persona.setDocumento(rs.getString("cedula"));
                 persona.setNombre(rs.getString("nombre"));
                 persona.setApellido(rs.getString("apellido"));
@@ -108,15 +104,15 @@ public class PersonaDAO {
                 persona.setContacto(rs.getString("contacto"));
                 persona.setTelefono2(rs.getString("telefono2"));
                 persona.setRh(rs.getString("rh"));
-                persona.setHuella(rs.getLong("huella"));
-                persona.setModificado(rs.getTimestamp("modificado"));
+                persona.setHuella(rs.getBytes("huella"));
+                persona.setModificado(rs.getTimestamp("mo"));
                 return persona;
         }
 
         // Utilidad para setear parámetros en PreparedStatement
         private void setParametros(PreparedStatement stmt, Persona persona) throws SQLException {
                 stmt.setInt(1, persona.getTipodocumento());
-                stmt.setString(2, persona.getDocumento());
+
                 stmt.setString(3, persona.getNombre());
                 stmt.setString(4, persona.getApellido());
                 stmt.setString(5, persona.getTelefono());
@@ -128,7 +124,7 @@ public class PersonaDAO {
                 stmt.setString(11, persona.getContacto());
                 stmt.setString(12, persona.getTelefono2());
                 stmt.setString(13, persona.getRh());
-                stmt.setLong(14, persona.getHuella());
+                stmt.setBytes(14, persona.getHuella());
                 stmt.setTimestamp(15, persona.getModificado());
         }
 }

@@ -20,13 +20,13 @@ public class Persona {
         private String contacto;
         private String telefono2;
         private String rh;
-        private long huella;
+        private byte[] huella;
         private Timestamp modificado;
 
     public Persona() {
     }
 
-    public Persona(int id, int tipodocumento, String documento, String nombre, String apellido, String telefono, String direccion, String correo, String ruta, Date nacimiento, String eps, String contacto, String telefono2, Timestamp modificado, long huella, String rh) {
+    public Persona(int id, int tipodocumento, String documento, String nombre, String apellido, String telefono, String direccion, String correo, String ruta, Date nacimiento, String eps, String contacto, String telefono2, Timestamp modificado, byte[] huella, String rh) {
         this.id = id;
         this.tipodocumento = tipodocumento;
         this.documento = documento;
@@ -165,11 +165,11 @@ public class Persona {
         this.modificado = modificado;
     }
 
-    public long getHuella() {
+    public byte[] getHuella() {
         return huella;
     }
 
-    public void setHuella(long huella) {
+    public void setHuella(byte[] huella) {
         this.huella = huella;
     }
 }

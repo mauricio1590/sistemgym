@@ -9,10 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
 @WebServlet("/personas")
 public class PersonaServlet extends HttpServlet {
     private PersonaDAO dao;
@@ -31,28 +31,19 @@ public class PersonaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
-        System.out.println("🟥 Acción recibida: " + accion);
 
         try {
-            if ("listar".equals(accion) || accion == null) {
-                List<Persona> personas = dao.listarPersonas();
-                System.out.println("🟥 Personas listadas: " + personas.size());
-                request.getSession().setAttribute("personas", personas);
-                response.sendRedirect("jsp/dashboard.jsp?vista=persona");
-
-            } else if ("eliminar".equals(accion)) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                dao.eliminarPersona(id);
-                List<Persona> personas = dao.listarPersonas();
-                request.getSession().setAttribute("personas", personas);
-                response.sendRedirect("jsp/dashboard.jsp?vista=persona");
-
-            } else if ("buscar".equals(accion)) {
+            if ("buscar".equals(accion)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 Persona persona = dao.obtenerPersonaPorId(id);
                 request.setAttribute("persona", persona);
                 RequestDispatcher rd = request.getRequestDispatcher("/jsp/formularioPersona.jsp");
                 rd.forward(request, response);
+
+            } else {
+                List<Persona> personas = dao.listarPersonas();
+                request.getSession().setAttribute("personas", personas);
+                response.sendRedirect("jsp/dashboard.jsp?vista=persona");
             }
 
         } catch (Exception e) {
@@ -79,11 +70,11 @@ public class PersonaServlet extends HttpServlet {
             persona.setContacto(request.getParameter("contacto"));
             persona.setTelefono2(request.getParameter("telefono2"));
             persona.setRh(request.getParameter("rh"));
-            persona.setHuella(Long.parseLong(request.getParameter("huella")));
+            persona.setHuella(request.getParameter("huella").getBytes());
             persona.setModificado(new java.sql.Timestamp(System.currentTimeMillis()));
 
-            String idParam = request.getParameter("id");
             boolean exito;
+            String idParam = request.getParameter("id");
 
             if (idParam != null && !idParam.isEmpty()) {
                 persona.setId(Integer.parseInt(idParam));
